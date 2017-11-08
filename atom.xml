@@ -2,12 +2,12 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
   <title>chusen&#39;s blog</title>
   
-  
+  <subtitle>学如逆水行舟 不进则退</subtitle>
   <link href="/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
-  <updated>2017-11-06T08:01:29.985Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="http://huxueru.xin/"/>
+  <updated>2017-11-08T13:04:19.606Z</updated>
+  <id>http://huxueru.xin/</id>
   
   <author>
     <name>楚森</name>
@@ -18,21 +18,24 @@
   
   <entry>
     <title>前言</title>
-    <link href="http://yoursite.com/2017/11/06/%E5%89%8D%E8%A8%80/"/>
-    <id>http://yoursite.com/2017/11/06/前言/</id>
+    <link href="http://huxueru.xin/2017/11/06/%E5%89%8D%E8%A8%80/"/>
+    <id>http://huxueru.xin/2017/11/06/前言/</id>
     <published>2017-11-06T07:48:36.000Z</published>
-    <updated>2017-11-06T08:01:29.985Z</updated>
+    <updated>2017-11-08T13:04:19.606Z</updated>
     
-    <content type="html"><![CDATA[<h2 id="搭建"><a href="#搭建" class="headerlink" title="搭建"></a>搭建</h2><p><code>通过这几天的学习初步搭建了一个博客，以前写笔记，都是通过word文档，感觉有一定的局限性。故而搭建了这个博客</code><br><a id="more"></a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="博客搭建"><a href="#博客搭建" class="headerlink" title="博客搭建"></a>博客搭建</h2><p>   </p><p>hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写了，关于这个博客，断断续续的搭了两三天，之前我一直是在word文档上记录平时的错误，但是呢这有一定的局限性，一是不能达到分享的目的，二是word文档没有一个好的归档排版，因此搭建博客，同时非常感谢网上的热心人士开源与交流，关于我的博客，我想记录一些平时学习和以后工作遇到的问题，旨在给和我遇到一样问题的同学一些思路，同时我本人也不是一个大牛，然后我们可以一起学习和交流，欢迎各位给我留言。</p><p></p><h2 id="联系我"><a href="#联系我" class="headerlink" title="联系我"></a>联系我</h2><p>   如果各位发现文章有错误和更好的建议 欢迎联系我。</p><ul><li>微信:fivemu-cs</li><li>邮箱:chusen12@163.com</li><li>QQ:2676840121</li></ul>]]></content>
     
     <summary type="html">
     
-      &lt;h2 id=&quot;搭建&quot;&gt;&lt;a href=&quot;#搭建&quot; class=&quot;headerlink&quot; title=&quot;搭建&quot;&gt;&lt;/a&gt;搭建&lt;/h2&gt;&lt;p&gt;&lt;code&gt;通过这几天的学习初步搭建了一个博客，以前写笔记，都是通过word文档，感觉有一定的局限性。故而搭建了这个博客&lt;/code&gt;&lt;br&gt;
+      
+      
+        &lt;h2 id=&quot;博客搭建&quot;&gt;&lt;a href=&quot;#博客搭建&quot; class=&quot;headerlink&quot; title=&quot;博客搭建&quot;&gt;&lt;/a&gt;博客搭建&lt;/h2&gt;&lt;p&gt;   &lt;/p&gt;&lt;p&gt;hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写
+      
     
     </summary>
     
     
-      <category term="杂记" scheme="http://yoursite.com/tags/%E6%9D%82%E8%AE%B0/"/>
+      <category term="杂记" scheme="http://huxueru.xin/tags/%E6%9D%82%E8%AE%B0/"/>
     
   </entry>
   
