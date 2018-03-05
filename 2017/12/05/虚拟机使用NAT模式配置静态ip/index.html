@@ -12,27 +12,27 @@
     <meta charset="utf-8">
     
     
-    <link rel="canonical" href="https://chusen12.github.io/2017/11/06/前言/">
+    <link rel="canonical" href="https://chusen12.github.io/2017/12/05/虚拟机使用NAT模式配置静态ip/">
     
     
-    <title>前言 | chusen&#39;s blog | 学如逆水行舟 不进则退</title>
+    <title>虚拟机使用NAT模式配置静态ip | chusen&#39;s blog | 学如逆水行舟 不进则退</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="杂记">
-    <meta name="description" content="博客搭建   hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写了，关于这个博客，断断续续的搭了两三天，之前我一直是在word文档上记录平时的错误，但是呢这有一定的局限性，一是不能达到分享的目的，二是word文档没有一个好的归档排版，因此搭建博客，同时非常感谢网上的热心人士开源与交流，关于我的博客，我想记录一些平时学习和以后工作遇到的问题，旨在">
-<meta name="keywords" content="杂记">
+    <meta name="keywords" content="linux">
+    <meta name="description" content="##1 基本配置 ##`之所以使用NAT模式而不使用桥接模式 是因为桥接模式非常依赖网络环境 ip容易改变 这是非常不好的 话不多说 直接贴图吧！  List item">
+<meta name="keywords" content="linux">
 <meta property="og:type" content="article">
-<meta property="og:title" content="前言">
-<meta property="og:url" content="http://www.huxueru.xin/2017/11/06/前言/index.html">
+<meta property="og:title" content="虚拟机使用NAT模式配置静态ip">
+<meta property="og:url" content="http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/index.html">
 <meta property="og:site_name" content="chusen&#39;s blog">
-<meta property="og:description" content="博客搭建   hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写了，关于这个博客，断断续续的搭了两三天，之前我一直是在word文档上记录平时的错误，但是呢这有一定的局限性，一是不能达到分享的目的，二是word文档没有一个好的归档排版，因此搭建博客，同时非常感谢网上的热心人士开源与交流，关于我的博客，我想记录一些平时学习和以后工作遇到的问题，旨在">
-<meta property="og:updated_time" content="2017-11-08T13:04:19.606Z">
+<meta property="og:description" content="##1 基本配置 ##`之所以使用NAT模式而不使用桥接模式 是因为桥接模式非常依赖网络环境 ip容易改变 这是非常不好的 话不多说 直接贴图吧！  List item">
+<meta property="og:updated_time" content="2017-12-05T05:03:03.823Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="前言">
-<meta name="twitter:description" content="博客搭建   hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写了，关于这个博客，断断续续的搭了两三天，之前我一直是在word文档上记录平时的错误，但是呢这有一定的局限性，一是不能达到分享的目的，二是word文档没有一个好的归档排版，因此搭建博客，同时非常感谢网上的热心人士开源与交流，关于我的博客，我想记录一些平时学习和以后工作遇到的问题，旨在">
+<meta name="twitter:title" content="虚拟机使用NAT模式配置静态ip">
+<meta name="twitter:description" content="##1 基本配置 ##`之所以使用NAT模式而不使用桥接模式 是因为桥接模式非常依赖网络环境 ip容易改变 这是非常不好的 话不多说 直接贴图吧！  List item">
     
         <link rel="alternate" type="application/atom+xml" title="chusen&#39;s blog" href="/atom.xml">
     
@@ -120,7 +120,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">前言</div>
+        <div class="flex-col header-title ellipsis">虚拟机使用NAT模式配置静态ip</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -142,11 +142,11 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">前言</h1>
+        <h1 class="title">虚拟机使用NAT模式配置静态ip</h1>
         <h5 class="subtitle">
             
-                <time datetime="2017-11-06T07:48:36.000Z" itemprop="datePublished" class="page-time">
-  2017-11-06
+                <time datetime="2017-12-05T01:09:01.000Z" itemprop="datePublished" class="page-time">
+  2017-12-05
 </time>
 
 
@@ -162,20 +162,13 @@
 
 <div class="container body-wrap">
     
-    <aside class="post-widget">
-        <nav class="post-toc-wrap" id="post-toc">
-            <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#博客搭建"><span class="post-toc-number">1.</span> <span class="post-toc-text">博客搭建</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#联系我"><span class="post-toc-number">2.</span> <span class="post-toc-text">联系我</span></a></li></ol>
-        </nav>
-    </aside>
-    
-<article id="post-前言"
+<article id="post-虚拟机使用NAT模式配置静态ip"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">前言</h1>
+        <h1 class="post-card-title">虚拟机使用NAT模式配置静态ip</h1>
         <div class="post-meta">
-            <time class="post-time" title="2017-11-06 15:48:36" datetime="2017-11-06T07:48:36.000Z"  itemprop="datePublished">2017-11-06</time>
+            <time class="post-time" title="2017-12-05 09:09:01" datetime="2017-12-05T01:09:01.000Z"  itemprop="datePublished">2017-12-05</time>
 
             
 
@@ -188,13 +181,10 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h2 id="博客搭建"><a href="#博客搭建" class="headerlink" title="博客搭建"></a>博客搭建</h2><p>   </p><p>hello,欢迎来到我的博客，首先关于具体的搭建过程我就不详细介绍了，网上有很多的教程，这里就不去重复写了，关于这个博客，断断续续的搭了两三天，之前我一直是在word文档上记录平时的错误，但是呢这有一定的局限性，一是不能达到分享的目的，二是word文档没有一个好的归档排版，因此搭建博客，同时非常感谢网上的热心人士开源与交流，关于我的博客，我想记录一些平时学习和以后工作遇到的问题，旨在给和我遇到一样问题的同学一些思路，同时我本人也不是一个大牛，然后我们可以一起学习和交流，欢迎各位给我留言。</p><p></p>
-<h2 id="联系我"><a href="#联系我" class="headerlink" title="联系我"></a>联系我</h2><p>   如果各位发现文章有错误和更好的建议 欢迎联系我。</p>
-<ul>
-<li>微信:fivemu-cs</li>
-<li>邮箱:chusen12@163.com</li>
-<li>QQ:2676840121</li>
-</ul>
+            <p>##1 基本配置 ##<br><code>`之所以使用NAT模式而不使用桥接模式 是因为桥接模式非常依赖网络环境 ip容易改变 这是非常不好的 话不多说 直接贴图吧！</code></p>
+<ol>
+<li>List item</li>
+</ol>
 
         </div>
 
@@ -202,7 +192,7 @@
     <div class="content">
         
 <span class="post-time">
-    最后更新时间：<time datetime="2017-11-08T13:04:19.606Z" itemprop="dateUpdated">2017-11-08 21:04:19</time>
+    最后更新时间：<time datetime="2017-12-05T05:03:03.823Z" itemprop="dateUpdated">2017-12-05 13:03:03</time>
 </span><br>
 
 
@@ -227,7 +217,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/杂记/">杂记</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
 
 
             
@@ -237,7 +227,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2017/11/06/前言/&title=《前言》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&title=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -247,22 +237,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2017/11/06/前言/&title=《前言》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&title=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2017/11/06/前言/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前言》 — chusen's blog&url=http://www.huxueru.xin/2017/11/06/前言/&via=http://www.huxueru.xin" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&via=http://www.huxueru.xin" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2017/11/06/前言/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -285,13 +275,20 @@
 <nav class="post-nav flex-row flex-justify-between">
   
     <div class="waves-block waves-effect prev">
-      <a href="/2017/12/05/虚拟机使用NAT模式配置静态ip/" id="post-prev" class="post-nav-link">
+      <a href="/2018/03/05/大文件的分割与合并/" id="post-prev" class="post-nav-link">
         <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">虚拟机使用NAT模式配置静态ip</h4>
+        <h4 class="title">大文件的分割与合并</h4>
       </a>
     </div>
   
 
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/11/06/前言/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">前言</h4>
+      </a>
+    </div>
   
 </nav>
 
@@ -384,7 +381,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2017/11/06/前言/&title=《前言》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&title=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -394,22 +391,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2017/11/06/前言/&title=《前言》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&title=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2017/11/06/前言/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《前言》 — chusen's blog&url=http://www.huxueru.xin/2017/11/06/前言/&via=http://www.huxueru.xin" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《虚拟机使用NAT模式配置静态ip》 — chusen's blog&url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/&via=http://www.huxueru.xin" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2017/11/06/前言/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2017/12/05/虚拟机使用NAT模式配置静态ip/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -420,7 +417,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABxUlEQVR42u3ay46DMAwF0P7/TzPbjtTCtU0yjHSyqloIpywsP/J6xet4W+/f5J/Pd7t54eLijrnH6Trnnl+fPCU34OLi7ud+ixi9UPUNkex/YcPFxX0ktwqtJky4uLj/l5v8jQcFMlxc3BY3L2aaRctd++Di4m7h5l3KdZ+X9HdxcXFb3KO4Jq3S3hN/7Y+Li7uFmweUeRLTG7Li4uI+gVsNTHkzNN+nMGTFxcVdwO01NKvtjN71UUaGi4u7gNvrP1TTl0nxEyVhuLi4i7nzgWgegJLrL/bBxcVdwJ3HvGbTs3fsAxcXdwt30hI9T1x6LZL8elxc3HXcnFVNR6I3FB/xxMXF3c893+K2pKT1Ij4EMlxc3MXcycizF/7yUW5U/ODi4i7j9m6r3tVDfwhkuLi4G7m9Jki12VG966LLi4uLu4Wbjz2q7Y9qaVSunHBxcW/iTkak1bFKXlaNuim4uLhjbr6qxzLuLZ/KfwYXF3fMnRzPWnHk4uJXXFzcjdzq6DQJTMldzfQFFxf3kdx5EXUeLpvTYFxc3D/i9kYjk9prlOLg4uIOuCuCTl7eJC8IFxd3J7caSnrj1d4QZdTfxcXF7XB/AGcEAS+WzCO5AAAAAElFTkSuQmCC" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACu0lEQVR42u3aUU4rMRAEQO5/afhFgg3dMzaPJ9V+RZuwcRnJM2n77S2+3j9dn+98/czTu1+f8/SE/P6xCw8PD28x9Kevf83L/6qdmuTJr6cMDw8P7x7vaUVNlubNcv/6e/Oy9HgfDw8P74/x2qHkRSgpDHh4eHj/F2/WUreBxSzswMPDw/sdXr5YJ/FBUiryln1WYPDw8PDu8fJdpL/z+sr+Hh4eHt56V70tFXngu4+Jo3Hi4eHhXeDNDlS1jDxQSFrkurHGw8PDO8rLvyD5ZDs17eu6XOHh4eFd4M1+1+8b5XzDbDZleHh4eLd5sxiiiAOC2T2VQP/wiwEPDw9vzcs33Vv27IjA7HhWcdwKDw8Pb83Lg9f8KFXy5KTMJP+AIozAw8PDO8TLY4J8cLOikgy3nj48PDy8C7zZwp2DkzvtFtqxXT48PDy8BW8WE2zAdb+/D3zx8PDwDvHyRXkWpM4OVOWHDIpDA3h4eHgXePmivIllZyVnWFTw8PDwrvHy4DWKTcsmeNZ8R1Q8PDy8a7x8kynf2m8TkdlWHB4eHt7v89r+c9MEt5thw2LQVic8PDy8NS9/3NlFf9NGHzs6gIeHh3f00FWL3DyhDYt/eDIeHh7eUV7bmG62/0+18sUhAzw8PLxrvHzzqY0hNrHvLJJY7a3h4eHhxT1wG8LOooeEkYwwmW48PDy8e7yEkQems4Z7NilRFcDDw8O7wNu0sAmsDWfzkeRjw8PDwzvLey+vfFh5MNFmCAUbDw8P7wIvv3LqjJcHu23Tj4eHh3eDl4eks8NPswhjFmp88xw8PDy8a7z2YEEbzrb7cnkFiwoDHh4e3j/izRrlvCnfv7sqDHh4eHgXeG2ku4l9k6mMSggeHh7eNV4SRrR5cLvdlbTONRUPDw/vAi/fAJst38mw6ojh7GECPDw8vJT3ARMRK/Bf+xDBAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 

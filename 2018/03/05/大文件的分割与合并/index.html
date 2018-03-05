@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    <link rel="canonical" href="https://chusen12.github.io/2018/03/05/大文件的分割与合并/">
+    
+    
+    <title>大文件的分割与合并 | chusen&#39;s blog | 学如逆水行舟 不进则退</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="java">
+    <meta name="description" content="1.整体思路&amp;emsp;首先我们会经常遇到一些大的文件的传输问题，对于大的文件传输，整体传输会非常的慢 效率很低，所以我们可以考虑 采用分解的思想，把大文件分解成若干个小文件，然后再对整体进行合并。如果进行跨机器传输的话，我们可以开启若干个线程 每个线程去分解文件，然后通过socket网络传输发送socket服务端 socket服务端也可以采用多个线程去接受 然后合并。 2.整体代码1.文件工具类">
+<meta name="keywords" content="java">
+<meta property="og:type" content="article">
+<meta property="og:title" content="大文件的分割与合并">
+<meta property="og:url" content="http://www.huxueru.xin/2018/03/05/大文件的分割与合并/index.html">
+<meta property="og:site_name" content="chusen&#39;s blog">
+<meta property="og:description" content="1.整体思路&amp;emsp;首先我们会经常遇到一些大的文件的传输问题，对于大的文件传输，整体传输会非常的慢 效率很低，所以我们可以考虑 采用分解的思想，把大文件分解成若干个小文件，然后再对整体进行合并。如果进行跨机器传输的话，我们可以开启若干个线程 每个线程去分解文件，然后通过socket网络传输发送socket服务端 socket服务端也可以采用多个线程去接受 然后合并。 2.整体代码1.文件工具类">
+<meta property="og:updated_time" content="2018-03-05T05:01:46.558Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="大文件的分割与合并">
+<meta name="twitter:description" content="1.整体思路&amp;emsp;首先我们会经常遇到一些大的文件的传输问题，对于大的文件传输，整体传输会非常的慢 效率很低，所以我们可以考虑 采用分解的思想，把大文件分解成若干个小文件，然后再对整体进行合并。如果进行跨机器传输的话，我们可以开启若干个线程 每个线程去分解文件，然后通过socket网络传输发送socket服务端 socket服务端也可以采用多个线程去接受 然后合并。 2.整体代码1.文件工具类">
+    
+        <link rel="alternate" type="application/atom+xml" title="chusen&#39;s blog" href="/atom.xml">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">楚森</h5>
+          <a href="mailto:chusen12@163.com" title="chusen12@163.com" class="mail">chusen12@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                文章
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/about"  >
+                <i class="icon icon-lg icon-link"></i>
+                关于我
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="http://weibo.com/u/5608011375" target="_blank" >
+                <i class="icon icon-lg icon-weibo"></i>
+                微博
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/chusen12" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">大文件的分割与合并</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">大文件的分割与合并</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2018-03-05T04:31:26.000Z" itemprop="datePublished" class="page-time">
+  2018-03-05
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#1-整体思路"><span class="post-toc-number">1.</span> <span class="post-toc-text">1.整体思路</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#2-整体代码"><span class="post-toc-number">2.</span> <span class="post-toc-text">2.整体代码</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#1-文件工具类代码"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1.文件工具类代码</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#2-文件分解线程主要代码"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">2.文件分解线程主要代码</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#3-文件合并线程主要代码"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">3.文件合并线程主要代码</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-大文件的分割与合并"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">大文件的分割与合并</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2018-03-05 12:31:26" datetime="2018-03-05T04:31:26.000Z"  itemprop="datePublished">2018-03-05</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h3 id="1-整体思路"><a href="#1-整体思路" class="headerlink" title="1.整体思路"></a>1.整体思路</h3><p>&emsp;首先我们会经常遇到一些大的文件的传输问题，对于大的文件传输，整体传输会非常的慢 效率很低，所以我们可以考虑 采用分解的思想，把大文件分解成若干个小文件，然后再对整体进行合并。如果进行跨机器传输的话，我们可以开启若干个线程 每个线程去分解文件，然后通过socket网络传输发送socket服务端 socket服务端也可以采用多个线程去接受 然后合并。</p>
+<h3 id="2-整体代码"><a href="#2-整体代码" class="headerlink" title="2.整体代码"></a>2.整体代码</h3><h4 id="1-文件工具类代码"><a href="#1-文件工具类代码" class="headerlink" title="1.文件工具类代码"></a>1.文件工具类代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileUtils</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mergePartFiles</span><span class="params">(String dirpath, String partFileSuffix, String mergeFileName)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        ArrayList&lt;File&gt; partFiles = getDirFiles(dirpath, partFileSuffix);<span class="comment">//7 27</span></div><div class="line">        Collections.sort(partFiles, <span class="keyword">new</span> FileComparator());</div><div class="line">        <span class="keyword">int</span> partFileSize = (<span class="keyword">int</span>) partFiles.get(<span class="number">0</span>).length();</div><div class="line">        RandomAccessFile randomAccessFile = <span class="keyword">new</span> RandomAccessFile(mergeFileName, <span class="string">"rw"</span>);</div><div class="line"><span class="comment">//        System.out.println("文件长度"+partFileSize * (partFiles.size() - 1) + partFiles.get(partFiles.size() - 1).length());</span></div><div class="line">        randomAccessFile.setLength(partFileSize * (partFiles.size() - <span class="number">1</span>) + partFiles.get(partFiles.size() - <span class="number">1</span>).length());</div><div class="line">        randomAccessFile.close();</div><div class="line">        <span class="keyword">for</span> (File partFile : partFiles) &#123;</div><div class="line">            System.out.println(partFile.getName() + partFile.length());</div><div class="line">        &#125;</div><div class="line">        ThreadPoolExecutor threadPool = <span class="keyword">new</span> ThreadPoolExecutor(partFiles.size(), partFiles.size() * <span class="number">3</span>, <span class="number">1</span>, TimeUnit.SECONDS, <span class="keyword">new</span> ArrayBlockingQueue&lt;Runnable&gt;(partFiles.size() * <span class="number">2</span>));</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; partFiles.size(); i++) &#123;</div><div class="line">            threadPool.execute(<span class="keyword">new</span> MergeRunnable(i * partFileSize, mergeFileName, partFiles.get(i)));</div><div class="line">        &#125;</div><div class="line">        System.out.println(<span class="string">"成功了！！！"</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 获得目录下的文件</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> dirpath</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> suffix</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span></span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> ArrayList&lt;File&gt; <span class="title">getDirFiles</span><span class="params">(String dirpath, <span class="keyword">final</span> String suffix)</span> </span>&#123;</div><div class="line">        File path = <span class="keyword">new</span> File(dirpath);</div><div class="line">        File[] fileArr = path.listFiles(<span class="keyword">new</span> FilenameFilter() &#123;</div><div class="line">            <span class="meta">@Override</span></div><div class="line">            <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">accept</span><span class="params">(File dir, String name)</span> </span>&#123;</div><div class="line">                String lowerName = name.toLowerCase();</div><div class="line">                String filesuffix = suffix.toLowerCase();</div><div class="line">                <span class="keyword">if</span> (lowerName.endsWith(filesuffix)) &#123;</div><div class="line">                    <span class="keyword">return</span> <span class="keyword">true</span>;</div><div class="line">                &#125; <span class="keyword">else</span></div><div class="line">                    <span class="keyword">return</span> <span class="keyword">false</span>;</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        ArrayList&lt;File&gt; files = <span class="keyword">new</span> ArrayList&lt;File&gt;();</div><div class="line">        <span class="keyword">for</span> (File file : fileArr) &#123;</div><div class="line"></div><div class="line">            <span class="keyword">if</span> (file.isFile()) &#123;</div><div class="line">                files.add(file);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> files;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> List&lt;String&gt; <span class="title">splitBySize</span><span class="params">(String fileName, <span class="keyword">int</span> count)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        List&lt;String&gt; parts = <span class="keyword">new</span> ArrayList&lt;String&gt;();</div><div class="line">        File file = <span class="keyword">new</span> File(fileName);</div><div class="line"><span class="comment">//        int byteSize = (int) Math.ceil(file.length() / (double)count);</span></div><div class="line">        List&lt;Integer&gt; bytes = <span class="keyword">new</span> ArrayList&lt;Integer&gt;();</div><div class="line">        <span class="keyword">int</span> countLen = (count+<span class="string">""</span>).length();</div><div class="line">        testLen((<span class="keyword">int</span>) file.length(), count, bytes);</div><div class="line">        ThreadPoolExecutor threadpool = <span class="keyword">new</span> ThreadPoolExecutor(count, count * <span class="number">3</span>, <span class="number">1</span>, TimeUnit.SECONDS, <span class="keyword">new</span> ArrayBlockingQueue&lt;Runnable&gt;(count * <span class="number">2</span>));</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; count; i++) &#123;</div><div class="line">            String partFileName = file.getName() + <span class="string">"_"</span> + leftPad(i+<span class="string">""</span>,countLen,<span class="string">'0'</span>) + <span class="string">".part"</span>;</div><div class="line">            threadpool.execute(<span class="keyword">new</span> SplitRunnable(bytes.get(i), i * bytes.get(i == <span class="number">0</span> ? <span class="number">0</span> : i - <span class="number">1</span>), partFileName, file));</div><div class="line">            parts.add(partFileName);</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> parts;</div><div class="line"></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> String <span class="title">leftPad</span><span class="params">(String str, <span class="keyword">int</span> countLen, <span class="keyword">char</span> c)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (str.length() &gt; countLen) &#123;</div><div class="line">            <span class="keyword">return</span> str;</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">char</span>[] chs = <span class="keyword">new</span> <span class="keyword">char</span>[countLen];</div><div class="line">        Arrays.fill(chs, c);</div><div class="line">        <span class="keyword">char</span>[] src = str.toCharArray();</div><div class="line">        System.arraycopy(src, <span class="number">0</span>, chs, countLen - src.length, src.length);</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> String(chs);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</div><div class="line">        <span class="keyword">new</span> FileUtils().mergePartFiles(<span class="string">"D:\\test\\frj\\"</span>, <span class="string">".mp4"</span>, <span class="string">"D:\\test\\frj\\merge.mp4"</span>); <span class="comment">//1,626,409,091</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/***</span></div><div class="line"><span class="comment">     * 构建文件大小集合</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> len</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> count</span></div><div class="line"><span class="comment">     * <span class="doctag">@param</span> arr</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">testLen</span><span class="params">(Integer len, <span class="keyword">int</span> count, List&lt;Integer&gt; arr)</span> </span>&#123;</div><div class="line">        <span class="keyword">int</span> i = len / count;</div><div class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</div><div class="line">        <span class="keyword">if</span> (len % count == <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">while</span> (j &lt; count) &#123;</div><div class="line">                arr.add(i);</div><div class="line">                j++;</div><div class="line">            &#125;</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line">            <span class="keyword">while</span> (j &lt; count - <span class="number">1</span>) &#123;</div><div class="line">                sum += i;</div><div class="line">                arr.add(i);</div><div class="line">                j++;</div><div class="line">            &#125;</div><div class="line">            arr.add(len - sum);</div><div class="line">        &#125;</div><div class="line">        System.out.println(arr);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/**</span></div><div class="line"><span class="comment">     * 根据文件名称 比较文件</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="keyword">private</span> <span class="class"><span class="keyword">class</span> <span class="title">FileComparator</span> <span class="keyword">implements</span> <span class="title">Comparator</span>&lt;<span class="title">File</span>&gt; </span>&#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(File o1, File o2)</span> </span>&#123;</div><div class="line">            <span class="keyword">return</span> o1.getName().compareToIgnoreCase(o2.getName());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="2-文件分解线程主要代码"><a href="#2-文件分解线程主要代码" class="headerlink" title="2.文件分解线程主要代码"></a>2.文件分解线程主要代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SplitRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> byteSize;</div><div class="line">    String partFileName;</div><div class="line">    File originFile;</div><div class="line">    <span class="keyword">int</span> startPos;</div><div class="line">    Socket socket;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SplitRunnable</span><span class="params">(<span class="keyword">int</span> byteSize, <span class="keyword">int</span> startPos,String partFileName,File originFile)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        <span class="keyword">this</span>.startPos = startPos;</div><div class="line">        <span class="keyword">this</span>.byteSize = byteSize;</div><div class="line">        <span class="keyword">this</span>.partFileName = partFileName;</div><div class="line">        <span class="keyword">this</span>.originFile = originFile;</div><div class="line"><span class="comment">//        socket = new Socket("localhost",8088);</span></div><div class="line">    &#125;</div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        RandomAccessFile rfile;</div><div class="line">        OutputStream os;</div><div class="line"><span class="comment">//        DataOutputStream dos;</span></div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line"><span class="comment">//            dos = new DataOutputStream(socket.getOutputStream());</span></div><div class="line">            rfile = <span class="keyword">new</span> RandomAccessFile(originFile,<span class="string">"r"</span>);</div><div class="line">            <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[byteSize];</div><div class="line">            rfile.seek(startPos);</div><div class="line">            <span class="keyword">int</span> s = rfile.read(b);</div><div class="line">            File file = <span class="keyword">new</span> File(partFileName);</div><div class="line"><span class="comment">//            写到本地的时候用</span></div><div class="line">            os = <span class="keyword">new</span> FileOutputStream(<span class="string">"d:/test/frj/"</span> + partFileName);</div><div class="line"><span class="comment">//            dos.writeUTF(file.getName());</span></div><div class="line"><span class="comment">//            dos.flush();</span></div><div class="line"><span class="comment">//            dos.writeLong(file.length());</span></div><div class="line"><span class="comment">//            dos.flush();</span></div><div class="line"><span class="comment">//            dos.write(b,0,s);</span></div><div class="line"><span class="comment">//            dos.flush();</span></div><div class="line"><span class="comment">//            dos.close();</span></div><div class="line">            os.write(b,<span class="number">0</span>,s);</div><div class="line">            os.flush();</div><div class="line">            os.close();</div><div class="line">        &#125; <span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="3-文件合并线程主要代码"><a href="#3-文件合并线程主要代码" class="headerlink" title="3.文件合并线程主要代码"></a>3.文件合并线程主要代码</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MergeRunnable</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</div><div class="line">    <span class="keyword">long</span> startPos;</div><div class="line">    String mergeFileName;</div><div class="line">    File partFile;</div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">MergeRunnable</span><span class="params">(<span class="keyword">int</span> startPos, String mergeFileName, File partFile)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.startPos = startPos;</div><div class="line">        <span class="keyword">this</span>.mergeFileName = mergeFileName;</div><div class="line">        <span class="keyword">this</span>.partFile = partFile;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</div><div class="line">        RandomAccessFile rfile;</div><div class="line">        <span class="keyword">try</span> &#123;</div><div class="line">            rfile = <span class="keyword">new</span> RandomAccessFile(mergeFileName,<span class="string">"rw"</span>);</div><div class="line">            rfile.seek(startPos);</div><div class="line">            FileInputStream fs = <span class="keyword">new</span> FileInputStream(partFile);</div><div class="line">            <span class="keyword">byte</span>[] b = <span class="keyword">new</span> <span class="keyword">byte</span>[fs.available()];</div><div class="line">            fs.read(b);</div><div class="line">            fs.close();</div><div class="line">            rfile.write(b);</div><div class="line">            rfile.close();</div><div class="line">        &#125; <span class="keyword">catch</span>(Exception e) &#123;</div><div class="line">            e.printStackTrace();</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2018-03-05T05:01:46.558Z" itemprop="dateUpdated">2018-03-05 13:01:46</time>
+</span><br>
+
+
+        
+        如有问题联系作者哦
+        
+    </div>
+    <footer>
+        <a href="http://www.huxueru.xin">
+            <img src="/img/avatar.jpg" alt="楚森">
+            楚森
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/java/">java</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&title=《大文件的分割与合并》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&title=《大文件的分割与合并》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《大文件的分割与合并》 — chusen's blog&url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&via=http://www.huxueru.xin" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/12/05/虚拟机使用NAT模式配置静态ip/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">虚拟机使用NAT模式配置静态ip</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2148195"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢你请我吃糖~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+	    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>喜欢该博客 订阅一下吧~</span>
+        </p>
+    </div>
+
+    <div class="bottom">
+        <p><span>楚森 &copy; 2016 - 2018</span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&title=《大文件的分割与合并》 — chusen's blog&pic=http://www.huxueru.xin/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&title=《大文件的分割与合并》 — chusen's blog&source=楚森个人博客" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《大文件的分割与合并》 — chusen's blog&url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/&via=http://www.huxueru.xin" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://www.huxueru.xin/2018/03/05/大文件的分割与合并/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACNUlEQVR42u3aS27DMAxF0ex/0+60QBr1PtIOIOp6FDhBpOMBLX5eL3xdv671t++/Wd95//xplRsuGTJkbMu4ltd6KymAPJpPsPVaMmTIOIHxaRkeUtdscr/1PzJkyJDRPhqmoVyGDBkyaoxacCSbW68lQ4YMGTyJ5cGUF9T472/LxWXIkLEhg1fdv//5kf6GDBkytmJcjat2HOQBN9iJDBkyRjPSIFhrUpI7teOpDBkyTmDUALWtkNYCT2KL51YZMmRsyEgTSJJe1kpvZN1/9ilDhoyhjM5iZMCCp6m8tYlycRkyZIxj1CrwfISCj1bwEbT4PSBDhowRDJKa1hLOzhgH2q0MGTJGM/iARe3+l7JwGTJkjGZ0Bh06ofAu8B+5uAwZMoYy0pDKy3PpuBhvM6BymwwZMgYx0j+qjXnx4lr6nzJkyDiBkRb90zJc2sgsDlvIkCHjAAZPKdOmZq3BEDxoGTJkHMBIy2rkgJiW2GrjaEmmK0OGjMmMuPP5ROl/XZiTIUPGaEZadCPpJUfyeRD0/zJkyBjKeCKl5Akwh8mQIeNkRq241m8PxO+EWpdDhgwZIxhXePGjIbnfGe8olttkyJCxIaOWdtYeQfpo0peBDBkyZjPIMrXmZT9YBwFXhgwZBzA69SueMfffAygXlyFDxsGMWugkd3hwvyHgypAhYzSjNq7RGSyLk1gZMmSMZvAklm80DaNp6T/ocsiQIWNzRpo6kkNebdPpt8X+hgwZMnZi/AA0DPUbBfu57wAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = '楚森个人博客';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '楚森个人博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
